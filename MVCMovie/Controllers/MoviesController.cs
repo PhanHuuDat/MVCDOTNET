@@ -26,7 +26,7 @@ namespace MVCMovie.Controllers
             // Use LINQ to get list of genres.
 
             var genreQuery = _movieService.GetGenresQuery();
-            var movies = await _movieService.GetMoviesAsync(searchString, movieGenre);
+            var movies = await _movieService.GetMoviesByConditionsAsync(searchString, movieGenre);
 
             var movieGenreVM = new MovieGenreViewModel
             {
@@ -40,12 +40,13 @@ namespace MVCMovie.Controllers
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _movieService.Movie == null)
+            
+            if (id == null || !_movieService.IsHasValue())
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movie
+            var movie = await _movieService.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -70,8 +71,7 @@ namespace MVCMovie.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
+                await _movieService.AddMovieAsync(movie);
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
