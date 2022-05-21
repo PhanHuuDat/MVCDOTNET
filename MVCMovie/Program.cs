@@ -14,7 +14,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MVCMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext")));
 
-builder.Services.AddScoped<IMovieService, MovieServices>();
+builder.Services.AddScoped<UnitOfWork>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
