@@ -13,11 +13,11 @@ namespace MVCMovie.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly MovieServices _movieService;
+        private readonly UnitOfWork _unitOfWork;
 
-        public MoviesController(MovieServices service)
+        public MoviesController(UnitOfWork service)
         {
-            _movieService = service;
+            _unitOfWork = service;
         }
 
         // GET: Movies
@@ -25,8 +25,8 @@ namespace MVCMovie.Controllers
         {
             // Use LINQ to get list of genres.
 
-            var genreQuery = _movieService.GetGenresQuery();
-            var movies = await _movieService.GetMoviesByConditionsAsync(searchString, movieGenre);
+            var genreQuery = _unitOfWork.MovieServices.GetGenresQuery();
+            var movies = await _unitOfWork.MovieServices.GetMoviesByConditionsAsync(searchString, movieGenre);
 
             var movieGenreVM = new MovieGenreViewModel
             {
@@ -41,13 +41,13 @@ namespace MVCMovie.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             
-            if (id == null || !_movieService.IsHasValue())
+            if (id == null || !_unitOfWork.MovieServices.IsHasValue())
             {
                 return NotFound();
             }
 
-            var movie = await _movieService.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _unitOfWork.MovieServices
+                .GetFirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace MVCMovie.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _movieService.AddMovieAsync(movie);
+                await _unitOfWork.MovieServices.AddMovieAsync(movie);
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
@@ -80,12 +80,12 @@ namespace MVCMovie.Controllers
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Movie == null)
+            if (id == null || _unitOfWork.MovieServices == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _unitOfWork.MovieServices.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
