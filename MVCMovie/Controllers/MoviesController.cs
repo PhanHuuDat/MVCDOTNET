@@ -109,12 +109,12 @@ namespace MVCMovie.Controllers
             {
                 try
                 {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
+                    _unitOfWork.MovieServices.Update(movie);
+                    await _unitOfWork.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MovieExists(movie.Id))
+                    if (!_unitOfWork.MovieServices.MovieExists(movie.Id))
                     {
                         return NotFound();
                     }
@@ -132,13 +132,13 @@ namespace MVCMovie.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Movie == null)
+            if (id == null || _unitOfWork.MovieServices == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _unitOfWork.MovieServices
+                .GetFirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
@@ -152,23 +152,21 @@ namespace MVCMovie.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Movie == null)
+            if (_unitOfWork.MovieServices == null)
             {
                 return Problem("Entity set 'MVCMovieContext.Movie'  is null.");
             }
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _unitOfWork.MovieServices.FindAsync(id);
             if (movie != null)
             {
-                _context.Movie.Remove(movie);
+                _unitOfWork.MovieServices.Remove(movie);
             }
 
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
-        {
-            return (_context.Movie?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+       
+
     }
 }

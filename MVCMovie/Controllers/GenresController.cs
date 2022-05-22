@@ -7,36 +7,37 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCMovie.Data;
 using MVCMovie.Models;
+using MVCMovie.Services;
 
 namespace MVCMovie.Controllers
 {
     public class GenresController : Controller
     {
-        private readonly MVCMovieContext _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public GenresController(MVCMovieContext context)
+        public GenresController(UnitOfWork context)
         {
-            _context = context;
+            _unitOfWork = context;
         }
 
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return _context.Genre != null ? 
-                          View(await _context.Genre.ToListAsync()) :
+              return _unitOfWork.GenreServices != null ? 
+                          View(await _unitOfWork.GenreServices.ToListAsync()) :
                           Problem("Entity set 'MVCMovieContext.Genre'  is null.");
         }
 
         // GET: Genres/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Genre == null)
+            if (id == null || _unitOfWork.GenreServices == null)
             {
                 return NotFound();
             }
 
-            var genre = await _context.Genre
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var genre = await _unitOfWork.GenreServices
+                .GetFirstOrDefaultAsync(m => m.Id == id);
             if (genre == null)
             {
                 return NotFound();
@@ -60,8 +61,7 @@ namespace MVCMovie.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(genre);
-                await _context.SaveChangesAsync();
+                await _unitOfWork.GenreServices.AddGenreAsync(genre);
                 return RedirectToAction(nameof(Index));
             }
             return View(genre);
@@ -70,12 +70,12 @@ namespace MVCMovie.Controllers
         // GET: Genres/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Genre == null)
+            if (id == null || _unitOfWork.GenreServices == null)
             {
                 return NotFound();
             }
 
-            var genre = await _context.Genre.FindAsync(id);
+            var genre = await _unitOfWork.GenreServices.FindAsync(id);
             if (genre == null)
             {
                 return NotFound();
@@ -99,12 +99,12 @@ namespace MVCMovie.Controllers
             {
                 try
                 {
-                    _context.Update(genre);
-                    await _context.SaveChangesAsync();
+                    _unitOfWork.GenreServices.Update(genre);
+                    await _unitOfWork.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GenreExists(genre.Id))
+                    if (!_unitOfWork.GenreServices.GenreExists(genre.Id))
                     {
                         return NotFound();
                     }
@@ -121,13 +121,13 @@ namespace MVCMovie.Controllers
         // GET: Genres/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Genre == null)
+            if (id == null || _unitOfWork.GenreServices == null)
             {
                 return NotFound();
             }
 
-            var genre = await _context.Genre
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var genre = await _unitOfWork.GenreServices
+                .GetFirstOrDefaultAsync(m => m.Id == id);
             if (genre == null)
             {
                 return NotFound();
@@ -141,23 +141,20 @@ namespace MVCMovie.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Genre == null)
+            if (_unitOfWork.GenreServices == null)
             {
                 return Problem("Entity set 'MVCMovieContext.Genre'  is null.");
             }
-            var genre = await _context.Genre.FindAsync(id);
+            var genre = await _unitOfWork.GenreServices.FindAsync(id);
             if (genre != null)
             {
-                _context.Genre.Remove(genre);
+                _unitOfWork.GenreServices.Remove(genre);
             }
             
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenreExists(int id)
-        {
-          return (_context.Genre?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        
     }
 }

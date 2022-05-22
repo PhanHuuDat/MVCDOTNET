@@ -72,9 +72,24 @@ namespace MVCMovie.Services
         }
 
         public async Task<Movie> FindAsync(params object?[]? keyValue)
-        {
-            
+        {           
             return await _context.Movie.FindAsync(keyValue);
+        }
+
+        public void Update(Movie movie)
+        {
+            _context.Update(movie);
+        }
+
+
+        public bool MovieExists(int id)
+        {
+            return (_context.Movie?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public void Remove(Movie movie)
+        {           
+            _context.Remove(movie);
         }
     }
 }

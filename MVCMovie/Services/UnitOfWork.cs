@@ -21,9 +21,10 @@ namespace MVCMovie.Services
             _db.Dispose(); 
         }
 
-        public void Save()
+        public async Task<int> SaveAsync()
         {
-            _db.SaveChanges();
+            
+            return await _db.SaveChangesAsync();
         }
     }
 }
