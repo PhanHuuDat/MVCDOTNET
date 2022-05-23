@@ -7,7 +7,7 @@ namespace MVCMovie.Models
     {
         public int Id { get; set; }
         [StringLength(100, ErrorMessage ="Must from 1 to 100")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Display(Name = "Created Date"), DataType(DataType.Date)]
         public DateTime CreatedDate { get; set; }
     }
