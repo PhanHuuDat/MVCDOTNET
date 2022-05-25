@@ -1,2 +1,13 @@
-﻿
-<p>Genre items</p>
+﻿@inject UnitOfWork unitOfWork
+
+<div class="dropdown">
+  <button class="nav-item dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @foreach(var item in unitOfWork.GenreServices.ToList())
+        {
+            <a class="dropdown-item" href="#">@item.Name</a>
+        }
+  </div>
+</div>

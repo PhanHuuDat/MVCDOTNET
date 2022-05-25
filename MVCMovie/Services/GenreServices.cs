@@ -14,6 +14,11 @@ namespace MVCMovie.Services
             _db = db;
         }
 
+        public List<Genre> ToList()
+        {
+            return _db.Genre.ToList();
+        }
+
         public async Task<List<Genre>> ToListAsync()
         {
             return await _db.Genre.ToListAsync();
