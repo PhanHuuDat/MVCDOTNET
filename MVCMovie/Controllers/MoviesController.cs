@@ -6,49 +6,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCMovie.Data;
-using MVCMovie.Models.ViewModels;
 using MVCMovie.Models;
-using MVCMovie.Services;
 
 namespace MVCMovie.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly MVCMovieContext _context;
 
-        public MoviesController(UnitOfWork service)
+        public MoviesController(MVCMovieContext context)
         {
-            _unitOfWork = service;
+            _context = context;
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(string movieGenre, string searchString)
+        public async Task<IActionResult> Index()
         {
-            // Use LINQ to get list of genres.
-
-            var genreQuery = _unitOfWork.MovieServices.GetGenresQuery();
-            var movies = await _unitOfWork.MovieServices.GetMoviesByConditionsAsync(searchString, movieGenre);
-
-            var movieGenreVM = new MovieGenreViewModel
-            {
-                Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
-                Movies = movies
-            };
-
-            return View(movieGenreVM);
+            var mVCMovieContext = _context.Movie.Include(m => m.Company);
+            return View(await mVCMovieContext.ToListAsync());
         }
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            
-            if (id == null || !_unitOfWork.MovieServices.IsHasValue())
+            if (id == null || _context.Movie == null)
             {
                 return NotFound();
             }
 
-            var movie = await _unitOfWork.MovieServices
-                .GetFirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movie
+                .Include(m => m.Company)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
@@ -60,6 +48,7 @@ namespace MVCMovie.Controllers
         // GET: Movies/Create
         public IActionResult Create()
         {
+            ViewData["ProducerId"] = new SelectList(_context.Company, "Id", "Id");
             return View();
         }
 
@@ -68,29 +57,32 @@ namespace MVCMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Price,Rating,ProducerId")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.MovieServices.AddMovieAsync(movie);
+                _context.Add(movie);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProducerId"] = new SelectList(_context.Company, "Id", "Id", movie.ProducerId);
             return View(movie);
         }
 
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _unitOfWork.MovieServices == null)
+            if (id == null || _context.Movie == null)
             {
                 return NotFound();
             }
 
-            var movie = await _unitOfWork.MovieServices.FindAsync(id);
+            var movie = await _context.Movie.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
             }
+            ViewData["ProducerId"] = new SelectList(_context.Company, "Id", "Id", movie.ProducerId);
             return View(movie);
         }
 
@@ -99,7 +91,7 @@ namespace MVCMovie.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Price,Rating,ProducerId")] Movie movie)
         {
             if (id != movie.Id)
             {
@@ -110,12 +102,12 @@ namespace MVCMovie.Controllers
             {
                 try
                 {
-                    _unitOfWork.MovieServices.Update(movie);
-                    await _unitOfWork.SaveAsync();
+                    _context.Update(movie);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_unitOfWork.MovieServices.MovieExists(movie.Id))
+                    if (!MovieExists(movie.Id))
                     {
                         return NotFound();
                     }
@@ -126,20 +118,21 @@ namespace MVCMovie.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProducerId"] = new SelectList(_context.Company, "Id", "Id", movie.ProducerId);
             return View(movie);
         }
 
         // GET: Movies/Delete/5
-
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _unitOfWork.MovieServices == null)
+            if (id == null || _context.Movie == null)
             {
                 return NotFound();
             }
 
-            var movie = await _unitOfWork.MovieServices
-                .GetFirstOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movie
+                .Include(m => m.Company)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
@@ -153,21 +146,23 @@ namespace MVCMovie.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_unitOfWork.MovieServices == null)
+            if (_context.Movie == null)
             {
                 return Problem("Entity set 'MVCMovieContext.Movie'  is null.");
             }
-            var movie = await _unitOfWork.MovieServices.FindAsync(id);
+            var movie = await _context.Movie.FindAsync(id);
             if (movie != null)
             {
-                _unitOfWork.MovieServices.Remove(movie);
+                _context.Movie.Remove(movie);
             }
-
-            await _unitOfWork.SaveAsync();
+            
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-       
-
+        private bool MovieExists(int id)
+        {
+          return _context.Movie.Any(e => e.Id == id);
+        }
     }
 }

@@ -9,11 +9,11 @@ namespace MVCMovie.Services
         public UnitOfWork(MVCMovieContext db)
         {
             _db = db;
-            MovieServices = new MovieServices(db);
+          
             GenreServices = new GenreServices(db);
         }
 
-        public MovieServices MovieServices { get; private set; }
+        
         public GenreServices GenreServices { get; private set; }
 
         public void Dispose()
