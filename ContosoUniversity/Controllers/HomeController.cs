@@ -1,9 +1,9 @@
-﻿using ContosoUniversity.Models;
+﻿using EducationalManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models.SchoolViewModels;
+using EducationalManagement.Data;
+using EducationalManagement.Models.SchoolViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace ContosoUniversity.Controllers

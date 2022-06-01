@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCMovie", "MVCMovie\MVCMovie.csproj", "{CA4E9796-CDD9-4683-9F1D-D2FCB12E866F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoUniversity", "ContosoUniversity\ContosoUniversity.csproj", "{579C8C3C-17A8-406A-854B-141F9C8F3588}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationalManagement", "ContosoUniversity\EducationalManagement.csproj", "{579C8C3C-17A8-406A-854B-141F9C8F3588}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
