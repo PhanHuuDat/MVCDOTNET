@@ -22,5 +22,8 @@ namespace MVCMovie.Models
 
         [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$"), StringLength(5)]
         public string? Rating { get; set; }
+        public int ProducerId { get; set; }
+        [ForeignKey("ProducerId")]
+        public Company Company { get; set; }
     }
 }

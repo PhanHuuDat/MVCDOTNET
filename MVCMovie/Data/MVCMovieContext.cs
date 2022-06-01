@@ -17,5 +17,9 @@ namespace MVCMovie.Data
         public DbSet<Movie>? Movie { get; set; }
 
         public DbSet<Genre>? Genre { get; set; }
+
+        public DbSet<MVCMovie.Models.Company> Company { get; set; }
+
+        public DbSet<MVCMovie.Models.Person> Person { get; set; }
     }
 }

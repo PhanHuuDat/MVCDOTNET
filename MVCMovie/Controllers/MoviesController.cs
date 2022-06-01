@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCMovie.Data;
+using MVCMovie.Models.ViewModels;
 using MVCMovie.Models;
 using MVCMovie.Services;
 
