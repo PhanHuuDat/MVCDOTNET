@@ -1,4 +1,4 @@
-﻿@model MVCMovie.Models.Movie
+﻿@model MVCMovie.Models.ViewModels.MovieVM
 
 @{
     ViewData["Title"] = "Create";
@@ -13,28 +13,34 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="MovieView.Movie.Title" class="control-label"></label>
+                <input asp-for="MovieView.Movie.Title" class="form-control" />
+                <span asp-validation-for="MovieView.Movie.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                <label asp-for="MovieView.Movie.ReleaseDate" class="control-label"></label>
+                <input asp-for="MovieView.Movie.ReleaseDate" class="form-control" />
+                <span asp-validation-for="MovieView.Movie.ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="MovieView.Movie.Price" class="control-label"></label>
+                <input asp-for="MovieView.Movie.Price" class="form-control" />
+                <span asp-validation-for="MovieView.Movie.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
+                <label asp-for="MovieView.Movie.Rating" class="control-label"></label>
+                <input asp-for="MovieView.Movie.Rating" class="form-control" />
+                <span asp-validation-for="MovieView.Movie.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProducerId" class="control-label"></label>
-                <select asp-for="ProducerId" class ="form-control" asp-items="ViewBag.ProducerId"></select>
+               @* @for (var box in Model.MovieView.Genre.)
+                {
+                    
+                }*@
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieView.Movie.Company.Name" class="control-label"></label>
+                <select asp-for="MovieView.Movie.Company.Name" class ="form-control" asp-items="ViewBag.ProducerId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

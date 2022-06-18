@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCMovie", "MVCMovie\MVCMov
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationalManagement", "ContosoUniversity\EducationalManagement.csproj", "{579C8C3C-17A8-406A-854B-141F9C8F3588}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoMVC2", "..\DemoMVC2\DemoMVC2.csproj", "{3AD51C5D-39A5-4B04-A9DA-3DCB11E42B14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{579C8C3C-17A8-406A-854B-141F9C8F3588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{579C8C3C-17A8-406A-854B-141F9C8F3588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{579C8C3C-17A8-406A-854B-141F9C8F3588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD51C5D-39A5-4B04-A9DA-3DCB11E42B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD51C5D-39A5-4B04-A9DA-3DCB11E42B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD51C5D-39A5-4B04-A9DA-3DCB11E42B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD51C5D-39A5-4B04-A9DA-3DCB11E42B14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
